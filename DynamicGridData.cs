@@ -8,21 +8,16 @@ namespace Umbraco.DataTypes.DynamicGrid
 
         /// =================================================================================
         /// <summary>
-        /// to be able to save XML data in the database as actual, nested xml, and not as string-encoded xml (ie not as <![CDATA[)
+        /// to be able to save XML data in the database as actual, nested xml, and not as string-encoded xml (ie not as ![CDATA[)>
         /// </summary>
         /// =================================================================================
         public override System.Xml.XmlNode ToXMl(System.Xml.XmlDocument data)
         {
-            if (this.Value != null && !string.IsNullOrEmpty(this.Value.ToString()))
-            {
-                XmlDocument xd = new XmlDocument();
-                xd.LoadXml(this.Value.ToString());
-                return data.ImportNode(xd.DocumentElement, true);
-            }
-            else
-            {
-                return base.ToXMl(data);
-            }
+            if (this.Value == null || string.IsNullOrEmpty(this.Value.ToString())) return base.ToXMl(data);
+            XmlDocument xd = new XmlDocument();
+            xd.LoadXml(this.Value.ToString());
+            return data.ImportNode(xd.DocumentElement, true);
+
         }
     }
 }

@@ -121,6 +121,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>XCOPY "$(ProjectDir)bin\Debug\Umbraco.DataTypes.DynamicGrid.*" "C:\inetpub\umbraco3\bin" /Y</PostBuildEvent>
+    <PostBuildEvent>XCOPY "$(ProjectDir)bin\Debug\Umbraco.DataTypes.DynamicGrid.dll" "E:\Projects\GarantiMG Intranet\GarantiMortgage.Intranet.WebUI\bin" /Y
+XCOPY "$(ProjectDir)bin\Debug\Umbraco.DataTypes.DynamicGrid.dll" "E:\Projects\GarantiMG Intranet\DLL" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>

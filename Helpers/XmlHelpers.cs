@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Web.UI.WebControls;
 using System.Xml;
 using System.Xml.Linq;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace Umbraco.DataTypes.DynamicGrid.Helpers
 {
@@ -31,10 +31,10 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             {
                 DataColumn col = new DataColumn();
                 TextBox headerTxtBox = (TextBox)table.Rows[0].Cells[i].Controls[0];
-                TextBox colIDTxtBox = (TextBox)table.Rows[0].Cells[i].Controls[0];
+                TextBox colIdTxtBox = (TextBox)table.Rows[0].Cells[i].Controls[0];
                 TextBox colCaptionTxtBox = (TextBox)table.Rows[1].Cells[i].Controls[0];
 
-                col.ColumnName = colIDTxtBox.Text;
+                col.ColumnName = colIdTxtBox.Text;
                 col.Caption = colCaptionTxtBox.Text;
                 dt.Columns.Add(col);
             }
@@ -77,7 +77,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                 TableCell headerCell = new TableCell();
                 TextBox headerTxtBox = new TextBox();
                 headerTxtBox.ID = "HeadersTxtBox" + i.ToString();// +UniqueID;
-                headerTxtBox.Text = string.Format("C{0}", i);// dt.Columns[i].ColumnName;
+                headerTxtBox.Text = $"C{i}";// dt.Columns[i].ColumnName;
                 headerTxtBox.Enabled = false;
                 headerTxtBox.Style.Add("visibility", "hidden");
 
@@ -93,11 +93,14 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             for (int i = 0; i < dt.Columns.Count; i++)
             {
                 TableCell captionCell = new TableCell();
-                TextBox captionTxtBox = new TextBox();
-                captionTxtBox.ID = "CaptionsTxtBox" + i.ToString();// +UniqueID;
+                TextBox captionTxtBox = new TextBox
+                {
+                    ID = "CaptionsTxtBox" + i.ToString(),// +UniqueID;
+                    Text = dt.Columns[i].Caption
+                };
+
                 captionTxtBox.Font.Bold = true;
                 captionTxtBox.Font.Size = new FontUnit(1.1, UnitType.Em);
-                captionTxtBox.Text = dt.Columns[i].Caption;
 
                 captionCell.Controls.Add(captionTxtBox);
                 captionRow.Cells.Add(captionCell);
@@ -115,9 +118,11 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                 for (int x = 0; x < dt.Columns.Count; x++)
                 {
                     TableCell valueCell = new TableCell();
-                    TextBox valueTxtBox = new TextBox();
-                    valueTxtBox.ID = "ValueTxtBox" + i.ToString() + i + x + x.ToString();// +UniqueID;
-                    valueTxtBox.Text = dt.Rows[i][x].ToString();
+                    TextBox valueTxtBox = new TextBox
+                    {
+                        ID = "ValueTxtBox" + i.ToString() + i + x + x.ToString(),// +UniqueID;
+                        Text = dt.Rows[i][x].ToString()
+                    };
 
                     //Left column bold (as headers).
                     if (x == 0)
@@ -141,11 +146,11 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
         /// <param name="xml">The XML string to convert.</param>
         /// <returns>A DataSet built from an XML string.</returns>
         /// =================================================================================
-        public static DataSet XMLStringToDataSet(string xml)
+        public static DataSet XmlStringToDataSet(string xml)
         {
             //strip out attributes and use them to populate a dictionary. We'll set DataColumn captions with them later
 
-            Dictionary<string, string> ColumnCaptions = new Dictionary<string, string>();
+            Dictionary<string, string> columnCaptions = new Dictionary<string, string>();
             XDocument xDoc = XDocument.Parse(xml);
 
             IEnumerable<XElement> els =
@@ -154,13 +159,10 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
 
             foreach (var x in els)
             {
-                if (!ColumnCaptions.ContainsKey(x.Name.LocalName))
+                if (!columnCaptions.ContainsKey(x.Name.LocalName))
                 {
                     var caps = x.Attribute("caption");
-                    if (caps != null)
-                        ColumnCaptions.Add(x.Name.LocalName, x.Attribute("caption").Value);
-                    else
-                        ColumnCaptions.Add(x.Name.LocalName, "CAPTION");
+                    columnCaptions.Add(x.Name.LocalName, caps != null ? x.Attribute("caption").Value : "CAPTION");
                 }
                 x.RemoveAttributes();
             }
@@ -171,8 +173,8 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
 
             foreach (DataColumn col in ds.Tables["Row"].Columns)
             {
-                if (ColumnCaptions.ContainsKey(col.ColumnName))
-                    col.Caption = ColumnCaptions[col.ColumnName];
+                if (columnCaptions.ContainsKey(col.ColumnName))
+                    col.Caption = columnCaptions[col.ColumnName];
             }
 
             return ds;
@@ -185,10 +187,10 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
         /// <param name="ds">The DataSet to convert.</param>
         /// <returns></returns>
         /// =================================================================================
-        public static string DataSetToXMLString(DataSet ds)
+        public static string DataSetToXmlString(DataSet ds)
         {
-            XmlDocument _XMLDoc = new XmlDocument();
-            _XMLDoc.LoadXml(ds.GetXml());
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(ds.GetXml());
 
 
 
@@ -199,7 +201,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             //xml.WriteTo(xw);
 
 
-            XDocument xd = XDocument.Load(new XmlNodeReader(_XMLDoc));
+            XDocument xd = XDocument.Load(new XmlNodeReader(xmlDoc));
             foreach (var xel in xd.Descendants())
             {
                 if (xel.Name.LocalName.StartsWith("C"))
@@ -226,34 +228,42 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             ds.Tables.Add(dt);
 
             // Creates at least 2 columns
-            DataColumn col0 = new DataColumn();
-            col0.Caption = "Label";
-            col0.ColumnName = "C0";
-            col0.DataType = System.Type.GetType("System.String");
+            DataColumn col0 = new DataColumn
+            {
+                Caption = "Label",
+                ColumnName = "C0",
+                DataType = Type.GetType("System.String")
+            };
             dt.Columns.Add(col0);
 
-            DataColumn col1 = new DataColumn();
-            col1.Caption = "Actual";
-            col1.ColumnName = "C1";
-            col1.DataType = System.Type.GetType("System.String");
+            DataColumn col1 = new DataColumn
+            {
+                Caption = "Actual",
+                ColumnName = "C1",
+                DataType = Type.GetType("System.String")
+            };
             dt.Columns.Add(col1);
 
             // Adds default value for 3rd column
             if (cols > 2)
             {
-                DataColumn heightCol = new DataColumn();
-                heightCol.Caption = "Target";
-                heightCol.ColumnName = "C2";
-                heightCol.DataType = System.Type.GetType("System.String");
+                DataColumn heightCol = new DataColumn
+                {
+                    Caption = "Target",
+                    ColumnName = "C2",
+                    DataType = Type.GetType("System.String")
+                };
                 dt.Columns.Add(heightCol);
             }
             // Adds default value for 4th column
             if (cols > 3)
             {
-                DataColumn depthCol = new DataColumn();
-                depthCol.Caption = "Status Report";
-                depthCol.ColumnName = "C3";
-                depthCol.DataType = System.Type.GetType("System.String");
+                DataColumn depthCol = new DataColumn
+                {
+                    Caption = "Status Report",
+                    ColumnName = "C3",
+                    DataType = Type.GetType("System.String")
+                };
                 dt.Columns.Add(depthCol);
             }
             // If more than 4 columns - create it with name "New" and append incremented number
@@ -262,10 +272,12 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                 //int newColCount = cols - 4;
                 for (int i = 4; i < cols; i++)
                 {
-                    DataColumn newCol = new DataColumn();
-                    newCol.Caption = "New Column " + i.ToString();
-                    newCol.ColumnName = "C" + i.ToString();
-                    newCol.DataType = System.Type.GetType("System.String");
+                    DataColumn newCol = new DataColumn
+                    {
+                        Caption = "New Column " + i.ToString(),
+                        ColumnName = "C" + i.ToString(),
+                        DataType = Type.GetType("System.String")
+                    };
                     dt.Columns.Add(newCol);
                 }
             }
@@ -298,25 +310,19 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
         public static bool IsValidXml(string data)
         {
             // Has to have length to be XML
-            if (!string.IsNullOrEmpty(data))
+            if (string.IsNullOrEmpty(data)) return false;
+            // If it starts with a < then it probably is XML
+            // But also cover the case where there is indeterminate whitespace before the <
+            if (data[0] != '<' && data.TrimStart()[0] != '<') return false;
+            try
             {
-                // If it starts with a < then it probably is XML
-                // But also cover the case where there is indeterminate whitespace before the <
-                if (data[0] == '<' || data.TrimStart()[0] == '<')
-                {
-                    try
-                    {
-                        string isValid = XElement.Parse(data).Value;
-                        return true;
-                    }
-                    catch (System.Xml.XmlException)
-                    {
-                        return false;
-                    }
-                }
+                string isValid = XElement.Parse(data).Value;
+                return true;
             }
-
-            return false;
+            catch (System.Xml.XmlException)
+            {
+                return false;
+            }
         }
 
         public static XmlNode GetXmlNode(this XElement element)

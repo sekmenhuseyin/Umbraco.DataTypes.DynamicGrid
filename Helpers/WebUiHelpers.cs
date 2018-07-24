@@ -16,7 +16,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             Control control = null;
 
             string ctrlname = page.Request.Params.Get("__EVENTTARGET");
-            if (ctrlname != null && ctrlname != string.Empty)
+            if (!string.IsNullOrEmpty(ctrlname))
             {
                 control = page.FindControl(ctrlname);
             }
@@ -25,11 +25,9 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                 foreach (string ctl in page.Request.Form)
                 {
                     Control c = page.FindControl(ctl);
-                    if (c is System.Web.UI.WebControls.Button)
-                    {
-                        control = c;
-                        break;
-                    }
+                    if (!(c is System.Web.UI.WebControls.Button)) continue;
+                    control = c;
+                    break;
                 }
             }
             return control;
