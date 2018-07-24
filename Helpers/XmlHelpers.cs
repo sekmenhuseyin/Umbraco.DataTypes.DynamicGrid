@@ -90,7 +90,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                 TableCell headerCell = new TableCell();
                 TextBox headerTxtBox = new TextBox
                 {
-                    ID = "HeadersTxtBox" + i.ToString(),// +UniqueID;
+                    ID = "HeadersTxtBox" + i,// +UniqueID;
                     Text = $"C{i}",// dt.Columns[i].ColumnName;
                     Enabled = false//its header: you cannot edit it.
                 };
@@ -156,7 +156,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             /////////////////// Add value rows
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                TableRow valueRow = new TableRow { ID = "TableRow" + i };
+                TableRow valueRow = new TableRow { CssClass = "TableRow" + i };
                 //Add cells & textbox to row
                 for (int x = 0; x < dt.Columns.Count; x++)
                 {
@@ -177,7 +177,8 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                 TableCell valueCellDelete = new TableCell();
                 CheckBox valueTxtBoxDelete = new CheckBox
                 {
-                    ID = "ValueTxtBoxDelete" + i
+                    ID = "ValueTxtBoxDelete" + i,
+                    CssClass = "id" + i
                 };
                 valueCellDelete.Controls.Add(valueTxtBoxDelete);
                 valueRow.Cells.Add(valueCellDelete);

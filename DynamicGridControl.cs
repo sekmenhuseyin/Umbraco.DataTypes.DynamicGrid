@@ -80,14 +80,14 @@ namespace Umbraco.DataTypes.DynamicGrid
             {
                 ID = "removeRow", //+ "_" + _uniqueID;//UniqueID; ;// + _uniqueID;// base.UniqueID;// base.ID;
                 Text = "Seçili Satırları Sil",
-                OnClientClick = "DeleteFromTable();"
+                OnClientClick = "DeleteCampaignsFromTable();"
             };
             _resetTable = new LinkButton
             {
                 ID = "resetTable",// + "_" + _uniqueID;// + UniqueID; ;//+ _uniqueID;// base.UniqueID;// base.ID;
                 Text = "Excel'den Yükle"
             };
-            _tablePanel = new Panel { ID = "PanelPlaceholder" }; // +_uniqueID;// +UniqueID; // +_uniqueID;// "PanelPlaceHolder_DynamicGridControl";
+            _tablePanel = new Panel { ID = "PanelPlaceholder", CssClass = "PanelPlaceholder" }; // +_uniqueID;// +UniqueID; // +_uniqueID;// "PanelPlaceHolder_DynamicGridControl";
 
             // Add to Update Panel
             _tablePanel.Controls.Add(_addRow);
