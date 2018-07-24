@@ -73,21 +73,22 @@ namespace Umbraco.DataTypes.DynamicGrid
             // Initialize buttons & Panel
             _addRow = new LinkButton
             {
-                ID = "addRow", // + "_" + _uniqueID;//UniqueID; ;//+ _uniqueID;//base.UniqueID;//base.ID;
+                ID = "addRow",
                 Text = "Satır Ekle"
             };
             _removeRow = new LinkButton
             {
-                ID = "removeRow", //+ "_" + _uniqueID;//UniqueID; ;// + _uniqueID;// base.UniqueID;// base.ID;
+                ID = "removeRow",
+                CssClass = "DynamicGridControlDeleteSelected",
                 Text = "Seçili Satırları Sil",
                 OnClientClick = "DeleteCampaignsFromTable();"
             };
             _resetTable = new LinkButton
             {
-                ID = "resetTable",// + "_" + _uniqueID;// + UniqueID; ;//+ _uniqueID;// base.UniqueID;// base.ID;
+                ID = "resetTable",
                 Text = "Excel'den Yükle"
             };
-            _tablePanel = new Panel { ID = "PanelPlaceholder", CssClass = "PanelPlaceholder" }; // +_uniqueID;// +UniqueID; // +_uniqueID;// "PanelPlaceHolder_DynamicGridControl";
+            _tablePanel = new Panel { ID = "PanelPlaceholder", CssClass = "PanelPlaceholder" };
 
             // Add to Update Panel
             _tablePanel.Controls.Add(_addRow);
@@ -109,15 +110,14 @@ namespace Umbraco.DataTypes.DynamicGrid
                     ColCount = NumberOfCols;
 
                     _tablePanel.Controls.Add(
-                        XmlHelpers.DataSetToTable(XmlHelpers.DefaultDataSet(RowCount, ColCount))); //, UniqueID));
+                        XmlHelpers.DataSetToTable(XmlHelpers.DefaultDataSet(RowCount, ColCount)));
                 }
                 // get from db
                 else
                 {
                     //Create dataset/table from XML string in database
                     DataSet ds = XmlHelpers.XMLStringToDataSet(_xmlValue);
-                    //DataSet ds = XmlHelpers.XMLStringToDataSet(HttpContext.Current.Server.HtmlDecode(_xmlValue));
-                    Table dimensionsTable = XmlHelpers.DataSetToTable(ds); //, UniqueID);
+                    Table dimensionsTable = XmlHelpers.DataSetToTable(ds);
                     _tablePanel.Controls.Add(dimensionsTable);
 
                     DataTable dt = ds.Tables["Row"];
@@ -125,7 +125,7 @@ namespace Umbraco.DataTypes.DynamicGrid
                     ColCount = dt.Columns.Count;
                 }
             }
-            // postback
+            // postback: occurs when a link is pressed
             else
             {
                 // We're using GetPostBackControl instead of the buttons' click events due to Page Cycle issues
@@ -145,20 +145,12 @@ namespace Umbraco.DataTypes.DynamicGrid
                             RowCount = RowCount + 1;
                             break;
 
-                        case "removeRow": // Remove 1 row
-                            // Has to have at least 1 row
-                            if (RowCount > 1)
-                            {
-                                RowCount = RowCount - 1;
-                            }
-                            break;
-
                         default:
                             break;
                     }
                 }
                 // Add grid based on new rowCount/colCount values
-                _tablePanel.Controls.Add(XmlHelpers.DataSetToTable(XmlHelpers.DefaultDataSet(RowCount, ColCount)));//, UniqueID));
+                _tablePanel.Controls.Add(XmlHelpers.DataSetToTable(XmlHelpers.DefaultDataSet(RowCount, ColCount)));
             }
         }
     }

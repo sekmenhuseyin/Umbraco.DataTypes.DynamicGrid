@@ -11,8 +11,8 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
 {
     public static class XmlHelpers
     {
-        private static string txtDelete = "Sil";
-        private static string[] txtColNames = { "Proje Adı", "Kampanya Kodu", "Portföy/İlgili Kişi", "Yüklenici Firma", "İl", "İlçe", "Duyuru Linki", "Ekstra" };
+        private const string TxtDelete = "Sil";
+        private static readonly string[] TxtColNames = { "Proje Adı", "Kampanya Kodu", "Portföy/İlgili Kişi", "Yüklenici Firma", "İl", "İlçe", "Duyuru Linki", "Ekstra" };
 
         /// =================================================================================
         /// <summary>
@@ -42,13 +42,14 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                     Caption = colCaptionTxtBox.Text
                 };
                 //if delete col do not add it
-                if (colCaptionTxtBox.Text != txtDelete)
+                if (colCaptionTxtBox.Text != TxtDelete)
                     dt.Columns.Add(col);
             }
 
             //Add values; skip over row[0] (id) and row[1] (caption)
             for (int i = 2; i < table.Rows.Count; i++)
             {
+                var isChecked = false;
                 DataRow valueRow = dt.NewRow();
                 for (int x = 0; x < table.Rows[i].Cells.Count; x++)
                 {
@@ -61,8 +62,18 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                     {
                         //this column doesnt have textbox so continue
                     }
+                    try
+                    {
+                        CheckBox valueCheckBox = (CheckBox)table.Rows[i].Cells[x].Controls[0];
+                        isChecked = valueCheckBox.Checked;
+                    }
+                    catch (Exception)
+                    {
+                        //this column doesnt have textbox so continue
+                    }
                 }
-                dt.Rows.Add(valueRow);
+                if (!isChecked)
+                    dt.Rows.Add(valueRow);
             }
 
             return ds;
@@ -75,12 +86,10 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
         /// <param name="ds"></param>
         /// <returns></returns>
         /// =================================================================================
-        public static Table DataSetToTable(DataSet ds)//, string UniqueID)
+        public static Table DataSetToTable(DataSet ds)
         {
-            //UniqueID = Guid.NewGuid().ToString();// string.Empty;
-
             DataTable dt = ds.Tables["Row"];
-            Table newTable = new Table { ID = "DynamicGridTable" };// +UniqueID;
+            Table newTable = new Table { ID = "DynamicGridTable" };
 
             /////////////////// Add IDs row
             TableRow headerRow = new TableRow();
@@ -90,8 +99,8 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                 TableCell headerCell = new TableCell();
                 TextBox headerTxtBox = new TextBox
                 {
-                    ID = "HeadersTxtBox" + i,// +UniqueID;
-                    Text = $"C{i}",// dt.Columns[i].ColumnName;
+                    ID = "HeadersTxtBox" + i,
+                    Text = $"C{i}",// ColumnName;
                     Enabled = false//its header: you cannot edit it.
                 };
                 headerTxtBox.Style.Add("visibility", "hidden");
@@ -123,7 +132,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
 
                 TextBox captionTxtBox = new TextBox
                 {
-                    ID = "CaptionsTxtBox" + i.ToString(),// +UniqueID;
+                    ID = "CaptionsTxtBox" + i,
                     Text = dt.Columns[i].Caption,
                     ReadOnly = true
                 };
@@ -141,7 +150,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             TextBox captionTxtBoxDelete = new TextBox
             {
                 ID = "CaptionsTxtBoxDelete",
-                Text = txtDelete,
+                Text = TxtDelete,
                 ReadOnly = true
             };
             captionTxtBoxDelete.Font.Bold = true;
@@ -163,7 +172,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                     TableCell valueCell = new TableCell();
                     TextBox valueTxtBox = new TextBox
                     {
-                        ID = "ValueTxtBox" + i.ToString() + i + x + x.ToString(),// +UniqueID;
+                        ID = "ValueTxtBox" + i + i + x + x,
                         Text = dt.Rows[i][x].ToString()
                     };
                     //Left column bold (as headers).
@@ -279,7 +288,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             {
                 DataColumn newCol = new DataColumn
                 {
-                    Caption = txtColNames[i],
+                    Caption = TxtColNames[i],
                     ColumnName = "C" + i,
                     DataType = Type.GetType("System.String")
                 };
@@ -292,7 +301,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                 DataRow newRow = dt.NewRow();
                 for (int j = 0; j < cols; j++)
                 {
-                    newRow["C" + j] = txtColNames[j];
+                    newRow["C" + j] = TxtColNames[j];
 
                 }
                 dt.Rows.Add(newRow);
