@@ -36,9 +36,6 @@ namespace Umbraco.DataTypes.DynamicGrid
         /// =================================================================================
 
         // Buttons
-        private LinkButton _addColumn;
-
-        private LinkButton _removeColumn;
         private LinkButton _addRow;
         private LinkButton _removeRow;
         private LinkButton _resetTable;
@@ -74,38 +71,24 @@ namespace Umbraco.DataTypes.DynamicGrid
             base.UpdateMode = UpdatePanelUpdateMode.Conditional;
 
             // Initialize buttons & Panel
-            _addColumn = new LinkButton
-            {
-                ID = "addColumn",// + "_" + _uniqueID;// + UniqueID; ;// + _uniqueID;// base.UniqueID;// base.ID;
-                Text = "Add Column"
-            };
-            _removeColumn = new LinkButton
-            {
-                ID = "removeColumn",// + "_" + _uniqueID;//+ UniqueID; ;// + _uniqueID;//base.UniqueID;//base.ID;
-                Text = "Remove Column"
-            };
             _addRow = new LinkButton
             {
                 ID = "addRow", // + "_" + _uniqueID;//UniqueID; ;//+ _uniqueID;//base.UniqueID;//base.ID;
-                Text = "Add Row"
+                Text = "Satır Ekle"
             };
             _removeRow = new LinkButton
             {
                 ID = "removeRow", //+ "_" + _uniqueID;//UniqueID; ;// + _uniqueID;// base.UniqueID;// base.ID;
-                Text = "Remove Row"
+                Text = "Seçili Satırları Sil"
             };
             _resetTable = new LinkButton
             {
                 ID = "resetTable",// + "_" + _uniqueID;// + UniqueID; ;//+ _uniqueID;// base.UniqueID;// base.ID;
-                Text = "Reset Table"
+                Text = "Excel'den Yükle"
             };
             _tablePanel = new Panel { ID = "PanelPlaceholder" }; // +_uniqueID;// +UniqueID; // +_uniqueID;// "PanelPlaceHolder_DynamicGridControl";
 
             // Add to Update Panel
-            _tablePanel.Controls.Add(_addColumn);
-            _tablePanel.Controls.Add(linksSpacer);
-            _tablePanel.Controls.Add(_removeColumn);
-            _tablePanel.Controls.Add(linksSpacer);
             _tablePanel.Controls.Add(_addRow);
             _tablePanel.Controls.Add(linksSpacer);
             _tablePanel.Controls.Add(_removeRow);
@@ -157,14 +140,8 @@ namespace Umbraco.DataTypes.DynamicGrid
                             RowCount = NumberOfRows;
                             break;
 
-                        // TODO: Set maximum number of rows that can be created
                         case "addRow": // Add new row
                             RowCount = RowCount + 1;
-                            break;
-
-                        // TODO: Set maximum number of columns that can be created
-                        case "addColumn": // Add new column
-                            ColCount = ColCount + 1;
                             break;
 
                         case "removeRow": // Remove 1 row
@@ -172,14 +149,6 @@ namespace Umbraco.DataTypes.DynamicGrid
                             if (RowCount > 1)
                             {
                                 RowCount = RowCount - 1;
-                            }
-                            break;
-
-                        case "removeColumn": // Remove 1 column
-                            // Has to have at least 2 columns
-                            if (ColCount > 2)
-                            {
-                                ColCount = ColCount - 1;
                             }
                             break;
 

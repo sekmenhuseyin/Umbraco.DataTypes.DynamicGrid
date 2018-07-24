@@ -84,7 +84,18 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                 headerCell.Controls.Add(headerTxtBox);
                 headerRow.Cells.Add(headerCell);
             }
-
+            //delete col
+            TableCell headerCellDelete = new TableCell();
+            TextBox headerTxtBoxDelete = new TextBox
+            {
+                ID = "HeadersTxtBoxDelete",
+                Text = "",
+                Enabled = false
+            };
+            headerTxtBoxDelete.Style.Add("visibility", "hidden");
+            headerCellDelete.Controls.Add(headerTxtBoxDelete);
+            headerRow.Cells.Add(headerCellDelete);
+            //add all cols to row
             newTable.Rows.Add(headerRow);
 
             /////////////////// Add Caption row
@@ -94,27 +105,44 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             for (int i = 0; i < dt.Columns.Count; i++)
             {
                 TableCell captionCell = new TableCell();
+                captionCell.Style.Value = "border-bottom:1pt solid black;";
+
                 TextBox captionTxtBox = new TextBox
                 {
                     ID = "CaptionsTxtBox" + i.ToString(),// +UniqueID;
-                    Text = dt.Columns[i].Caption
+                    Text = dt.Columns[i].Caption,
+                    ReadOnly = true
                 };
-
                 captionTxtBox.Font.Bold = true;
+                captionTxtBox.BorderStyle = BorderStyle.None;
                 captionTxtBox.Font.Size = new FontUnit(1.1, UnitType.Em);
 
                 captionCell.Controls.Add(captionTxtBox);
                 captionRow.Cells.Add(captionCell);
             }
+            //delete col
+            TableCell captionCellDelete = new TableCell();
+            captionCellDelete.Style.Value = "border-bottom:1pt solid black;";
 
+            TextBox captionTxtBoxDelete = new TextBox
+            {
+                ID = "CaptionsTxtBoxDelete",
+                Text = "Sil",
+                ReadOnly = true
+            };
+            captionTxtBoxDelete.Font.Bold = true;
+            captionTxtBoxDelete.BorderStyle = BorderStyle.None;
+            captionTxtBoxDelete.Font.Size = new FontUnit(1.1, UnitType.Em);
+
+            captionCellDelete.Controls.Add(captionTxtBoxDelete);
+            captionRow.Cells.Add(captionCellDelete);
+            //add all cols to row
             newTable.Rows.Add(captionRow);
 
             /////////////////// Add value rows
-
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                TableRow valueRow = new TableRow();
-
+                TableRow valueRow = new TableRow { ID = "TableRow" + i };
                 //Add cells & textbox to row
                 for (int x = 0; x < dt.Columns.Count; x++)
                 {
@@ -124,7 +152,6 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                         ID = "ValueTxtBox" + i.ToString() + i + x + x.ToString(),// +UniqueID;
                         Text = dt.Rows[i][x].ToString()
                     };
-
                     //Left column bold (as headers).
                     if (x == 0)
                         valueTxtBox.Font.Bold = true;
@@ -132,6 +159,15 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                     valueCell.Controls.Add(valueTxtBox);
                     valueRow.Cells.Add(valueCell);
                 }
+                //delete col
+                TableCell valueCellDelete = new TableCell();
+                CheckBox valueTxtBoxDelete = new CheckBox
+                {
+                    ID = "ValueTxtBoxDelete" + i
+                };
+                valueCellDelete.Controls.Add(valueTxtBoxDelete);
+                valueRow.Cells.Add(valueCellDelete);
+                //add all cols to row
                 newTable.Rows.Add(valueRow);
             }
 
