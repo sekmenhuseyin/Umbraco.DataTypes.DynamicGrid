@@ -17,7 +17,7 @@ namespace Umbraco.DataTypes.DynamicGrid
         {
             get
             {
-                string possibleXml = XmlHelpers.DataSetToXmlString(XmlHelpers.TableToDataSet((Table)_tablePanel.FindControl("DynamicGridTable")));
+                string possibleXml = XmlHelpers.DataSetToXMLString(XmlHelpers.TableToDataSet((Table)_tablePanel.FindControl("DynamicGridTable")));
                 return XmlHelpers.IsValidXml(possibleXml) ? possibleXml : string.Empty;
             }
             set
@@ -57,7 +57,7 @@ namespace Umbraco.DataTypes.DynamicGrid
         /// <summary>
         /// A counter that stores the number of columns to be created.
         /// </summary>
-        private int colCount
+        private int ColCount
         {
             get => (int)ViewState["colCount"];
             set => ViewState["colCount"] = value;
@@ -120,23 +120,23 @@ namespace Umbraco.DataTypes.DynamicGrid
                 if (string.IsNullOrEmpty(_xmlValue))
                 {
                     RowCount = NumberOfRows;
-                    colCount = NumberOfCols;
+                    ColCount = NumberOfCols;
 
                     _tablePanel.Controls.Add(
-                        XmlHelpers.DataSetToTable(XmlHelpers.DefaultDataSet(RowCount, colCount))); //, UniqueID));
+                        XmlHelpers.DataSetToTable(XmlHelpers.DefaultDataSet(RowCount, ColCount))); //, UniqueID));
                 }
                 // get from db
                 else
                 {
                     //Create dataset/table from XML string in database
-                    DataSet ds = XmlHelpers.XmlStringToDataSet(_xmlValue);
+                    DataSet ds = XmlHelpers.XMLStringToDataSet(_xmlValue);
                     //DataSet ds = XmlHelpers.XMLStringToDataSet(HttpContext.Current.Server.HtmlDecode(_xmlValue));
                     Table dimensionsTable = XmlHelpers.DataSetToTable(ds); //, UniqueID);
                     _tablePanel.Controls.Add(dimensionsTable);
 
                     DataTable dt = ds.Tables["Row"];
                     RowCount = dt.Rows.Count;
-                    colCount = dt.Columns.Count;
+                    ColCount = dt.Columns.Count;
                 }
             }
             // postback
@@ -151,7 +151,7 @@ namespace Umbraco.DataTypes.DynamicGrid
                     switch (controlId)
                     {
                         case "resetTable": // Reset to default values
-                            colCount = NumberOfCols;
+                            ColCount = NumberOfCols;
                             RowCount = NumberOfRows;
                             break;
 
@@ -162,7 +162,7 @@ namespace Umbraco.DataTypes.DynamicGrid
 
                         // TODO: Set maximum number of columns that can be created
                         case "addColumn": // Add new column
-                            colCount = colCount + 1;
+                            ColCount = ColCount + 1;
                             break;
 
                         case "removeRow": // Remove 1 row
@@ -175,9 +175,9 @@ namespace Umbraco.DataTypes.DynamicGrid
 
                         case "removeColumn": // Remove 1 column
                             // Has to have at least 2 columns
-                            if (colCount > 2)
+                            if (ColCount > 2)
                             {
-                                colCount = colCount - 1;
+                                ColCount = ColCount - 1;
                             }
                             break;
 
@@ -186,7 +186,7 @@ namespace Umbraco.DataTypes.DynamicGrid
                     }
                 }
                 // Add grid based on new rowCount/colCount values
-                _tablePanel.Controls.Add(XmlHelpers.DataSetToTable(XmlHelpers.DefaultDataSet(RowCount, colCount)));//, UniqueID));
+                _tablePanel.Controls.Add(XmlHelpers.DataSetToTable(XmlHelpers.DefaultDataSet(RowCount, ColCount)));//, UniqueID));
 
             }
         }

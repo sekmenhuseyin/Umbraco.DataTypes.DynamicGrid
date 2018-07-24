@@ -125,7 +125,7 @@
 XCOPY "$(ProjectDir)bin\Release\Umbraco.DataTypes.DynamicGrid.dll" "E:\Projects\GarantiMG Intranet\DLL" /Y</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)\DLL\UpdateVersion.exe" -b Increment -r Increment -t "$(ConfigurationName)" -i "$(ProjectDir)\Properties\AssemblyInfo.cs" -o "$(ProjectDir)\Properties\AssemblyInfo.cs" -v Assembly
-"$(SolutionDir)\DLL\UpdateVersion.exe" -b Increment -r Increment -t "$(ConfigurationName)" -i "$(ProjectDir)\Properties\AssemblyInfo.cs" -o "$(ProjectDir)\Properties\AssemblyInfo.cs" -v File</PreBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)\DLL\UpdateVersion.exe" -b Increment -t "$(ConfigurationName)" -i "$(ProjectDir)\Properties\AssemblyInfo.cs" -o "$(ProjectDir)\Properties\AssemblyInfo.cs" -v Assembly
+"$(SolutionDir)\DLL\UpdateVersion.exe" -b Increment -t "$(ConfigurationName)" -i "$(ProjectDir)\Properties\AssemblyInfo.cs" -o "$(ProjectDir)\Properties\AssemblyInfo.cs" -v File</PreBuildEvent>
   </PropertyGroup>
 </Project>

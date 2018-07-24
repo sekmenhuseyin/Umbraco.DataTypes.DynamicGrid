@@ -66,11 +66,9 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             //UniqueID = Guid.NewGuid().ToString();// string.Empty;
 
             DataTable dt = ds.Tables["Row"];
-            Table newTable = new Table { ID = "DynamicGridTable" };
-            // +UniqueID;
+            Table newTable = new Table { ID = "DynamicGridTable" };// +UniqueID;
 
             /////////////////// Add IDs row
-
             TableRow headerRow = new TableRow();
             //auto generated haeder id row
             for (int i = 0; i < dt.Columns.Count; i++)
@@ -99,8 +97,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                 TextBox captionTxtBox = new TextBox
                 {
                     ID = "CaptionsTxtBox" + i.ToString(),// +UniqueID;
-                    Text = dt.Columns[i].Caption,
-                    Enabled = false//its caption: you cannot edit it.
+                    Text = dt.Columns[i].Caption
                 };
 
                 captionTxtBox.Font.Bold = true;
@@ -117,8 +114,8 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 TableRow valueRow = new TableRow();
+
                 //Add cells & textbox to row
-                var satirdaBilgiVar = false;
                 for (int x = 0; x < dt.Columns.Count; x++)
                 {
                     TableCell valueCell = new TableCell();
@@ -127,14 +124,15 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                         ID = "ValueTxtBox" + i.ToString() + i + x + x.ToString(),// +UniqueID;
                         Text = dt.Rows[i][x].ToString()
                     };
-                    if (valueTxtBox.Text.Trim() != "")
-                        satirdaBilgiVar = true;
+
+                    //Left column bold (as headers).
+                    if (x == 0)
+                        valueTxtBox.Font.Bold = true;
 
                     valueCell.Controls.Add(valueTxtBox);
                     valueRow.Cells.Add(valueCell);
                 }
-                if (satirdaBilgiVar)
-                    newTable.Rows.Add(valueRow);
+                newTable.Rows.Add(valueRow);
             }
 
             return newTable;
@@ -147,7 +145,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
         /// <param name="xml">The XML string to convert.</param>
         /// <returns>A DataSet built from an XML string.</returns>
         /// =================================================================================
-        public static DataSet XmlStringToDataSet(string xml)
+        public static DataSet XMLStringToDataSet(string xml)
         {
             //strip out attributes and use them to populate a dictionary. We'll set DataColumn captions with them later
 
@@ -188,7 +186,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
         /// <param name="ds">The DataSet to convert.</param>
         /// <returns></returns>
         /// =================================================================================
-        public static string DataSetToXmlString(DataSet ds)
+        public static string DataSetToXMLString(DataSet ds)
         {
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(ds.GetXml());
