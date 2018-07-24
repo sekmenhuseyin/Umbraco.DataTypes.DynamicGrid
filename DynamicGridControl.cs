@@ -31,7 +31,7 @@ namespace Umbraco.DataTypes.DynamicGrid
         private string UniqueId => this.UniqueID;
 
         /// =================================================================================
-        #region UI & Counters
+        /// UI & Counters
         /// =================================================================================
 
         // Buttons
@@ -64,35 +64,40 @@ namespace Umbraco.DataTypes.DynamicGrid
         }
 
         /// =================================================================================
-        #endregion
-
-
+        /// when page loads design links and page
+        /// =================================================================================
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             base.UpdateMode = UpdatePanelUpdateMode.Conditional;
 
             // Initialize buttons & Panel
-            _addColumn = new LinkButton();
-            _removeColumn = new LinkButton();
-            _addRow = new LinkButton();
-            _removeRow = new LinkButton();
-            _resetTable = new LinkButton();
-            _tablePanel = new Panel();
-            _tablePanel.ID = "PanelPlaceholder";// +_uniqueID;// +UniqueID; // +_uniqueID;// "PanelPlaceHolder_DynamicGridControl";
-
-            _addColumn.ID = "addColumn";// + "_" + _uniqueID;// + UniqueID; ;// + _uniqueID;// base.UniqueID;// base.ID;
-            _removeColumn.ID = "removeColumn";// + "_" + _uniqueID;//+ UniqueID; ;// + _uniqueID;//base.UniqueID;//base.ID;
-            _addRow.ID = "addRow";// + "_" + _uniqueID;//UniqueID; ;//+ _uniqueID;//base.UniqueID;//base.ID;
-            _removeRow.ID = "removeRow";//+ "_" + _uniqueID;//UniqueID; ;// + _uniqueID;// base.UniqueID;// base.ID;
-            _resetTable.ID = "resetTable";// + "_" + _uniqueID;// + UniqueID; ;//+ _uniqueID;// base.UniqueID;// base.ID;
-
-            // Set text
-            _addColumn.Text = "Add Column";
-            _removeColumn.Text = "Remove Column";
-            _addRow.Text = "Add Row";
-            _removeRow.Text = "Remove Row";
-            _resetTable.Text = "Reset Table";
+            _addColumn = new LinkButton
+            {
+                ID = "addColumn",// + "_" + _uniqueID;// + UniqueID; ;// + _uniqueID;// base.UniqueID;// base.ID;
+                Text = "Add Column"
+            };
+            _removeColumn = new LinkButton
+            {
+                ID = "removeColumn",// + "_" + _uniqueID;//+ UniqueID; ;// + _uniqueID;//base.UniqueID;//base.ID;
+                Text = "Remove Column"
+            };
+            _addRow = new LinkButton
+            {
+                ID = "addRow", // + "_" + _uniqueID;//UniqueID; ;//+ _uniqueID;//base.UniqueID;//base.ID;
+                Text = "Add Row"
+            };
+            _removeRow = new LinkButton
+            {
+                ID = "removeRow", //+ "_" + _uniqueID;//UniqueID; ;// + _uniqueID;// base.UniqueID;// base.ID;
+                Text = "Remove Row"
+            };
+            _resetTable = new LinkButton
+            {
+                ID = "resetTable",// + "_" + _uniqueID;// + UniqueID; ;//+ _uniqueID;// base.UniqueID;// base.ID;
+                Text = "Reset Table"
+            };
+            _tablePanel = new Panel { ID = "PanelPlaceholder" }; // +_uniqueID;// +UniqueID; // +_uniqueID;// "PanelPlaceHolder_DynamicGridControl";
 
             // Add to Update Panel
             _tablePanel.Controls.Add(_addColumn);
