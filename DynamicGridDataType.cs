@@ -9,20 +9,15 @@ namespace Umbraco.DataTypes.DynamicGrid
         /// =================================================================================
         /// Control Prevalues
         /// =================================================================================
-
         [DataEditorSetting("Number Of Columns", description = "Default Number of Columns", defaultValue = "4")]
         public string NumberOfCols { get; set; }
 
         [DataEditorSetting("Number Of Rows", description = "Default Number of Rows", defaultValue = "2")]
         public string NumberOfRows { get; set; }
-
         /// =================================================================================
-
         private readonly DynamicGridControl _control = new DynamicGridControl();
-
         public override Guid Id => new Guid("50665d19-d6bd-4901-a4a7-7e0cc1011504");
         public override string DataTypeName => "Dynamic Grid";
-
         private umbraco.interfaces.IData _data { get; set; }
         public override umbraco.interfaces.IData Data => _data ?? (_data = new DynamicGridData(this));
 
@@ -40,10 +35,10 @@ namespace Umbraco.DataTypes.DynamicGrid
 
         /// =================================================================================
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// =================================================================================
-        void control_Init(object sender, EventArgs e)
+        private void control_Init(object sender, EventArgs e)
         {
             int outInt;
 
@@ -54,13 +49,12 @@ namespace Umbraco.DataTypes.DynamicGrid
 
         /// =================================================================================
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// =================================================================================
-        void DataEditorControl_OnSave(EventArgs e)
+        private void DataEditorControl_OnSave(EventArgs e)
         {
             Data.Value = _control.XmlValue;
         }
-
     }
 }

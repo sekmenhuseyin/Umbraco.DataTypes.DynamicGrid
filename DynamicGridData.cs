@@ -4,7 +4,9 @@ namespace Umbraco.DataTypes.DynamicGrid
 {
     public class DynamicGridData : umbraco.cms.businesslogic.datatype.DefaultData
     {
-        public DynamicGridData(umbraco.cms.businesslogic.datatype.BaseDataType DataType) : base(DataType) { }
+        public DynamicGridData(umbraco.cms.businesslogic.datatype.BaseDataType DataType) : base(DataType)
+        {
+        }
 
         /// =================================================================================
         /// <summary>
@@ -17,7 +19,6 @@ namespace Umbraco.DataTypes.DynamicGrid
             XmlDocument xd = new XmlDocument();
             xd.LoadXml(this.Value.ToString());
             return data.ImportNode(xd.DocumentElement, true);
-
         }
     }
 }

@@ -191,14 +191,11 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(ds.GetXml());
 
-
-
             //StringWriter sw = new StringWriter();
             //XmlTextWriter xw = new XmlTextWriter(sw);
 
             //XmlDocument xml = _XMLDoc;
             //xml.WriteTo(xw);
-
 
             XDocument xd = XDocument.Load(new XmlNodeReader(xmlDoc));
             foreach (var xel in xd.Descendants())

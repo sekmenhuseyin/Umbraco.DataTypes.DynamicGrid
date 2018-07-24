@@ -13,6 +13,7 @@ namespace Umbraco.DataTypes.DynamicGrid
         public int NumberOfCols { get; set; }
 
         private string _xmlValue { get; set; }
+
         public string XmlValue
         {
             get
@@ -36,6 +37,7 @@ namespace Umbraco.DataTypes.DynamicGrid
 
         // Buttons
         private LinkButton _addColumn;
+
         private LinkButton _removeColumn;
         private LinkButton _addRow;
         private LinkButton _removeRow;
@@ -187,7 +189,6 @@ namespace Umbraco.DataTypes.DynamicGrid
                 }
                 // Add grid based on new rowCount/colCount values
                 _tablePanel.Controls.Add(XmlHelpers.DataSetToTable(XmlHelpers.DefaultDataSet(RowCount, ColCount)));//, UniqueID));
-
             }
         }
     }
