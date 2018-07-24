@@ -116,26 +116,27 @@ namespace Umbraco.DataTypes.DynamicGrid
             // could have values in db, or could prepopulate with defaults
             if (!Page.IsPostBack)
             {
+                //emtpy data: default rows and cols
+                if (string.IsNullOrEmpty(_xmlValue))
+                {
+                    RowCount = NumberOfRows;
+                    colCount = NumberOfCols;
+
+                    _tablePanel.Controls.Add(
+                        XmlHelpers.DataSetToTable(XmlHelpers.DefaultDataSet(RowCount, colCount))); //, UniqueID));
+                }
                 // get from db
-                if (!string.IsNullOrEmpty(_xmlValue))
+                else
                 {
                     //Create dataset/table from XML string in database
                     DataSet ds = XmlHelpers.XmlStringToDataSet(_xmlValue);
                     //DataSet ds = XmlHelpers.XMLStringToDataSet(HttpContext.Current.Server.HtmlDecode(_xmlValue));
-                    Table dimensionsTable = XmlHelpers.DataSetToTable(ds);//, UniqueID);
+                    Table dimensionsTable = XmlHelpers.DataSetToTable(ds); //, UniqueID);
                     _tablePanel.Controls.Add(dimensionsTable);
 
                     DataTable dt = ds.Tables["Row"];
                     RowCount = dt.Rows.Count;
                     colCount = dt.Columns.Count;
-                }
-                // prepopulate with defaults
-                else
-                {
-                    RowCount = NumberOfRows;
-                    colCount = NumberOfCols;
-
-                    _tablePanel.Controls.Add(XmlHelpers.DataSetToTable(XmlHelpers.DefaultDataSet(RowCount, colCount)));//, UniqueID));
                 }
             }
             // postback

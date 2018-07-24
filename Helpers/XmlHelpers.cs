@@ -66,8 +66,8 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             //UniqueID = Guid.NewGuid().ToString();// string.Empty;
 
             DataTable dt = ds.Tables["Row"];
-            Table newTable = new Table();
-            newTable.ID = "DynamicGridTable";// +UniqueID;
+            Table newTable = new Table { ID = "DynamicGridTable" };
+            // +UniqueID;
 
             /////////////////// Add IDs row
 
@@ -75,12 +75,13 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             for (int i = 0; i < dt.Columns.Count; i++)
             {
                 TableCell headerCell = new TableCell();
-                TextBox headerTxtBox = new TextBox();
-                headerTxtBox.ID = "HeadersTxtBox" + i.ToString();// +UniqueID;
-                headerTxtBox.Text = $"C{i}";// dt.Columns[i].ColumnName;
-                headerTxtBox.Enabled = false;
+                TextBox headerTxtBox = new TextBox
+                {
+                    ID = "HeadersTxtBox" + i.ToString(),// +UniqueID;
+                    Text = $"C{i}",// dt.Columns[i].ColumnName;
+                    Enabled = false
+                };
                 headerTxtBox.Style.Add("visibility", "hidden");
-
                 headerCell.Controls.Add(headerTxtBox);
                 headerRow.Cells.Add(headerCell);
             }
