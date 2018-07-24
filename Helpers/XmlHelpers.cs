@@ -11,6 +11,9 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
 {
     public static class XmlHelpers
     {
+        private static string txtDelete = "Sil";
+        private static string[] txtColNames = { "Proje Adı", "Kampanya Kodu", "Portföy/İlgili Kişi", "Yüklenici Firma", "İl", "İlçe", "Duyuru Linki", "Ekstra" };
+
         /// =================================================================================
         /// <summary>
         /// Reads an ASP table with textboxes and stores the values in a DataSet.
@@ -29,14 +32,18 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             //Add headers
             for (int i = 0; i < table.Rows[0].Cells.Count; i++)
             {
-                DataColumn col = new DataColumn();
                 TextBox headerTxtBox = (TextBox)table.Rows[0].Cells[i].Controls[0];
                 TextBox colIdTxtBox = (TextBox)table.Rows[0].Cells[i].Controls[0];
                 TextBox colCaptionTxtBox = (TextBox)table.Rows[1].Cells[i].Controls[0];
 
-                col.ColumnName = colIdTxtBox.Text;
-                col.Caption = colCaptionTxtBox.Text;
-                dt.Columns.Add(col);
+                DataColumn col = new DataColumn
+                {
+                    ColumnName = colIdTxtBox.Text,
+                    Caption = colCaptionTxtBox.Text
+                };
+                //if delete col do not add it
+                if (colCaptionTxtBox.Text != txtDelete)
+                    dt.Columns.Add(col);
             }
 
             //Add values; skip over row[0] (id) and row[1] (caption)
@@ -45,8 +52,15 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                 DataRow valueRow = dt.NewRow();
                 for (int x = 0; x < table.Rows[i].Cells.Count; x++)
                 {
-                    TextBox valueTextBox = (TextBox)table.Rows[i].Cells[x].Controls[0];
-                    valueRow[x] = valueTextBox.Text;
+                    try
+                    {
+                        TextBox valueTextBox = (TextBox)table.Rows[i].Cells[x].Controls[0];
+                        valueRow[x] = valueTextBox.Text;
+                    }
+                    catch (Exception)
+                    {
+                        //this column doesnt have textbox so continue
+                    }
                 }
                 dt.Rows.Add(valueRow);
             }
@@ -127,7 +141,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             TextBox captionTxtBoxDelete = new TextBox
             {
                 ID = "CaptionsTxtBoxDelete",
-                Text = "Sil",
+                Text = txtDelete,
                 ReadOnly = true
             };
             captionTxtBoxDelete.Font.Bold = true;
@@ -259,74 +273,26 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             DataTable dt = new DataTable("Row");
             ds.Tables.Add(dt);
 
-            // Creates at least 2 columns
-            DataColumn col0 = new DataColumn
+            // create columns with name "New" and append incremented number
+            for (int i = 0; i < cols; i++)
             {
-                Caption = "Label",
-                ColumnName = "C0",
-                DataType = Type.GetType("System.String")
-            };
-            dt.Columns.Add(col0);
-
-            DataColumn col1 = new DataColumn
-            {
-                Caption = "Actual",
-                ColumnName = "C1",
-                DataType = Type.GetType("System.String")
-            };
-            dt.Columns.Add(col1);
-
-            // Adds default value for 3rd column
-            if (cols > 2)
-            {
-                DataColumn heightCol = new DataColumn
+                DataColumn newCol = new DataColumn
                 {
-                    Caption = "Target",
-                    ColumnName = "C2",
+                    Caption = txtColNames[i],
+                    ColumnName = "C" + i,
                     DataType = Type.GetType("System.String")
                 };
-                dt.Columns.Add(heightCol);
-            }
-            // Adds default value for 4th column
-            if (cols > 3)
-            {
-                DataColumn depthCol = new DataColumn
-                {
-                    Caption = "Status Report",
-                    ColumnName = "C3",
-                    DataType = Type.GetType("System.String")
-                };
-                dt.Columns.Add(depthCol);
-            }
-            // If more than 4 columns - create it with name "New" and append incremented number
-            if (cols > 4)
-            {
-                //int newColCount = cols - 4;
-                for (int i = 4; i < cols; i++)
-                {
-                    DataColumn newCol = new DataColumn
-                    {
-                        Caption = "New Column " + i.ToString(),
-                        ColumnName = "C" + i.ToString(),
-                        DataType = Type.GetType("System.String")
-                    };
-                    dt.Columns.Add(newCol);
-                }
+                dt.Columns.Add(newCol);
             }
 
             // Add rows from specified "rows" parameter
             for (int i = 0; i < rows; i++)
             {
                 DataRow newRow = dt.NewRow();
-                newRow["C0"] = "Label" + i.ToString();
-                newRow["C1"] = "Actual " + i.ToString();
-                if (cols > 2)
+                for (int j = 0; j < cols; j++)
                 {
-                    newRow["C2"] = "Target " + i.ToString();
-                }
-                if (cols > 3)
-                {
-                    newRow["C3"] = "Status Report " + i.ToString();
+                    newRow["C" + j] = txtColNames[j];
+
                 }
                 dt.Rows.Add(newRow);
             }

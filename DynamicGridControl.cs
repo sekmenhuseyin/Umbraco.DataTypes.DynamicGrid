@@ -79,7 +79,8 @@ namespace Umbraco.DataTypes.DynamicGrid
             _removeRow = new LinkButton
             {
                 ID = "removeRow", //+ "_" + _uniqueID;//UniqueID; ;// + _uniqueID;// base.UniqueID;// base.ID;
-                Text = "Seçili Satırları Sil"
+                Text = "Seçili Satırları Sil",
+                OnClientClick = "DeleteFromTable();"
             };
             _resetTable = new LinkButton
             {
