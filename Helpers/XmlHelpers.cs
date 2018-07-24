@@ -72,6 +72,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             /////////////////// Add IDs row
 
             TableRow headerRow = new TableRow();
+            //auto generated haeder id row
             for (int i = 0; i < dt.Columns.Count; i++)
             {
                 TableCell headerCell = new TableCell();
@@ -79,7 +80,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                 {
                     ID = "HeadersTxtBox" + i.ToString(),// +UniqueID;
                     Text = $"C{i}",// dt.Columns[i].ColumnName;
-                    Enabled = false
+                    Enabled = false//its header: you cannot edit it.
                 };
                 headerTxtBox.Style.Add("visibility", "hidden");
                 headerCell.Controls.Add(headerTxtBox);
@@ -91,13 +92,15 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             /////////////////// Add Caption row
 
             TableRow captionRow = new TableRow();
+            //auto generated caption row
             for (int i = 0; i < dt.Columns.Count; i++)
             {
                 TableCell captionCell = new TableCell();
                 TextBox captionTxtBox = new TextBox
                 {
                     ID = "CaptionsTxtBox" + i.ToString(),// +UniqueID;
-                    Text = dt.Columns[i].Caption
+                    Text = dt.Columns[i].Caption,
+                    Enabled = false//its caption: you cannot edit it.
                 };
 
                 captionTxtBox.Font.Bold = true;
@@ -114,8 +117,8 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 TableRow valueRow = new TableRow();
-
                 //Add cells & textbox to row
+                var satirdaBilgiVar = false;
                 for (int x = 0; x < dt.Columns.Count; x++)
                 {
                     TableCell valueCell = new TableCell();
@@ -124,17 +127,14 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                         ID = "ValueTxtBox" + i.ToString() + i + x + x.ToString(),// +UniqueID;
                         Text = dt.Rows[i][x].ToString()
                     };
-
-                    //Left column bold (as headers).
-                    if (x == 0)
-                    {
-                        valueTxtBox.Font.Bold = true;
-                    }
+                    if (valueTxtBox.Text.Trim() != "")
+                        satirdaBilgiVar = true;
 
                     valueCell.Controls.Add(valueTxtBox);
                     valueRow.Cells.Add(valueCell);
                 }
-                newTable.Rows.Add(valueRow);
+                if (satirdaBilgiVar)
+                    newTable.Rows.Add(valueRow);
             }
 
             return newTable;
