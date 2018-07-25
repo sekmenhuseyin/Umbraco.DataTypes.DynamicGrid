@@ -13,20 +13,24 @@ namespace Umbraco.DataTypes.DynamicGrid
         /// this sapces has to here otherwise only one spacer is added to page
         /// </summary>
         private HtmlGenericControl LinksSpacer => new HtmlGenericControl("span") { InnerHtml = "&nbsp;|&nbsp;" };
+
         /// <summary>
         /// Panel to hold the controls
         /// </summary>
         private Panel _tablePanel;
+
         /// <summary>
         /// number of cols in the table
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
         public int NumberOfCols { get; set; }
+
         /// <summary>
         /// number of rows in the table
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
         public int NumberOfRows { get; set; }
+
         /// <summary>
         /// the xml that out table ,s de,gned from
         /// </summary>
@@ -43,8 +47,10 @@ namespace Umbraco.DataTypes.DynamicGrid
                     _xmlValue = value;
             }
         }
+
         // ReSharper disable once InconsistentNaming
         private string _xmlValue { get; set; }
+
         /// <summary>
         /// A counter that stores the number of columns to be created.
         /// </summary>
@@ -53,6 +59,7 @@ namespace Umbraco.DataTypes.DynamicGrid
             get => (int)ViewState["colCount"];
             set => ViewState["colCount"] = value;
         }
+
         /// <summary>
         /// A counter that stores the number of rows to be created.
         /// </summary>
@@ -61,6 +68,7 @@ namespace Umbraco.DataTypes.DynamicGrid
             get => (int)ViewState["rowCount"];
             set => ViewState["rowCount"] = value;
         }
+
         /// =================================================================================
         /// when page loads design links and page
         /// =================================================================================
@@ -100,7 +108,7 @@ namespace Umbraco.DataTypes.DynamicGrid
             {
                 ID = "uploadExcelButton",
                 Text = "Excel'den Yükle",
-                CssClass= "DynamicGridControlUploadExcelButton"
+                CssClass = "DynamicGridControlUploadExcelButton"
             };
             _tablePanel = new Panel
             {
@@ -172,7 +180,6 @@ namespace Umbraco.DataTypes.DynamicGrid
                         case "addRow": // Add new row
                             RowCount = RowCount + 1;
                             break;
-                            
                     }
                 }
                 // Add grid based on new rowCount/colCount values
