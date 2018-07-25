@@ -32,18 +32,26 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             //Add headers
             for (int i = 0; i < table.Rows[0].Cells.Count; i++)
             {
-                TextBox headerTxtBox = (TextBox)table.Rows[0].Cells[i].Controls[0];
-                TextBox colIdTxtBox = (TextBox)table.Rows[0].Cells[i].Controls[0];
-                TextBox colCaptionTxtBox = (TextBox)table.Rows[1].Cells[i].Controls[0];
-
-                DataColumn col = new DataColumn
+                try
                 {
-                    ColumnName = colIdTxtBox.Text,
-                    Caption = colCaptionTxtBox.Text
-                };
-                //if delete col do not add it
-                if (colCaptionTxtBox.Text != TxtDelete)
-                    dt.Columns.Add(col);
+                    TextBox headerTxtBox = (TextBox)table.Rows[0].Cells[i].Controls[0];
+                    TextBox colIdTxtBox = (TextBox)table.Rows[0].Cells[i].Controls[0];
+                    TextBox colCaptionTxtBox = (TextBox)table.Rows[1].Cells[i].Controls[0];
+
+                    DataColumn col = new DataColumn
+                    {
+                        ColumnName = colIdTxtBox.Text,
+                        Caption = colCaptionTxtBox.Text
+                    };
+                    //if delete col do not add it
+                    if (colCaptionTxtBox.Text != TxtDelete)
+                        dt.Columns.Add(col);
+                }
+                catch (Exception)
+                {
+                    //this column doesnt have textbox or have a checkbox so continue
+
+                }
             }
 
             //Add values; skip over row[0] (id) and row[1] (caption)
@@ -69,7 +77,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                     }
                     catch (Exception)
                     {
-                        //this column doesnt have textbox so continue
+                        //this column doesnt have CheckBox so continue
                     }
                 }
                 if (!isChecked)
@@ -108,12 +116,13 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                 headerRow.Cells.Add(headerCell);
             }
             //delete col
-            TableCell headerCellDelete = new TableCell();
+            TableCell headerCellDelete = new TableCell { Width = 50 };
             TextBox headerTxtBoxDelete = new TextBox
             {
                 ID = "HeadersTxtBoxDelete",
                 Text = "",
-                Enabled = false
+                Enabled = false,
+                Width = 50
             };
             headerTxtBoxDelete.Style.Add("visibility", "hidden");
             headerCellDelete.Controls.Add(headerTxtBoxDelete);
@@ -144,19 +153,28 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                 captionRow.Cells.Add(captionCell);
             }
             //delete col
-            TableCell captionCellDelete = new TableCell();
+            TableCell captionCellDelete = new TableCell { Width = 50 };
             captionCellDelete.Style.Value = "border-bottom:1pt solid black;";
-
+            //delete caption
             TextBox captionTxtBoxDelete = new TextBox
             {
                 ID = "CaptionsTxtBoxDelete",
                 Text = TxtDelete,
-                ReadOnly = true
+                ReadOnly = true,
+                Width = 20,
+                CssClass = "floatRight"
             };
             captionTxtBoxDelete.Font.Bold = true;
             captionTxtBoxDelete.BorderStyle = BorderStyle.None;
             captionTxtBoxDelete.Font.Size = new FontUnit(1.1, UnitType.Em);
-
+            //select all checkbox for delete
+            CheckBox valueCheckBoxSelectAll = new CheckBox
+            {
+                ID = "ValueCheckBoxSelectAll",
+                CssClass = "DynamicGridCheckBoxSelectAll"
+            };
+            //add controls to cell
+            captionCellDelete.Controls.Add(valueCheckBoxSelectAll);
             captionCellDelete.Controls.Add(captionTxtBoxDelete);
             captionRow.Cells.Add(captionCellDelete);
             //add all cols to row
@@ -183,13 +201,14 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                     valueRow.Cells.Add(valueCell);
                 }
                 //delete col
-                TableCell valueCellDelete = new TableCell();
-                CheckBox valueTxtBoxDelete = new CheckBox
+                TableCell valueCellDelete = new TableCell { Width = 50 };
+                CheckBox valueCheckBoxDelete = new CheckBox
                 {
-                    ID = "ValueTxtBoxDelete" + i,
-                    CssClass = "id" + i
+                    ID = "ValueCheckBoxDelete" + i,
+                    CssClass = "DynamicGridCheckBoxDelete id" + i,
+                    Width = 50
                 };
-                valueCellDelete.Controls.Add(valueTxtBoxDelete);
+                valueCellDelete.Controls.Add(valueCheckBoxDelete);
                 valueRow.Cells.Add(valueCellDelete);
                 //add all cols to row
                 newTable.Rows.Add(valueRow);
