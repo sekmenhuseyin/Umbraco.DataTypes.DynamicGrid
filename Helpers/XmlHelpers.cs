@@ -34,6 +34,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             {
                 try
                 {
+                    // ReSharper disable once UnusedVariable
                     TextBox headerTxtBox = (TextBox)table.Rows[0].Cells[i].Controls[0];
                     TextBox colIdTxtBox = (TextBox)table.Rows[0].Cells[i].Controls[0];
                     TextBox colCaptionTxtBox = (TextBox)table.Rows[1].Cells[i].Controls[0];
@@ -58,6 +59,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             for (int i = 2; i < table.Rows.Count; i++)
             {
                 var isChecked = false;
+                var addedRows = 0;
                 DataRow valueRow = dt.NewRow();
                 for (int x = 0; x < table.Rows[i].Cells.Count; x++)
                 {
@@ -80,10 +82,22 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                         //this column doesnt have CheckBox so continue
                     }
                 }
-                if (!isChecked)
-                    dt.Rows.Add(valueRow);
+                //if this has a checked to delete col do not add: so it will be deleted
+                //but do NOT delete the last 2 lines: otherwise page will throw error
+                if (isChecked && (i < table.Rows.Count - 2 || addedRows != 0))
+                {
+                    continue;
+                }
+
+                dt.Rows.Add(valueRow);
+                // ReSharper disable once RedundantAssignment
+                addedRows++;
             }
 
+            if (dt.Rows.Count == 0)
+            {
+
+            }
             return ds;
         }
 
@@ -224,6 +238,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
         /// <param name="xml">The XML string to convert.</param>
         /// <returns>A DataSet built from an XML string.</returns>
         /// =================================================================================
+        // ReSharper disable once InconsistentNaming
         public static DataSet XMLStringToDataSet(string xml)
         {
             //strip out attributes and use them to populate a dictionary. We'll set DataColumn captions with them later
@@ -231,18 +246,24 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             Dictionary<string, string> columnCaptions = new Dictionary<string, string>();
             XDocument xDoc = XDocument.Parse(xml);
 
+            //chekc for null value;
+            if (xDoc.Root == null) return DefaultDataSet(2, 5);
+
             IEnumerable<XElement> els =
                 (from el in xDoc.Root.Elements().Elements()
                  select el);
 
             foreach (var x in els)
             {
-                if (!columnCaptions.ContainsKey(x.Name.LocalName))
+                if (columnCaptions.ContainsKey(x.Name.LocalName))
+                {
+                    x.RemoveAttributes();
+                }
+                else
                 {
                     var caps = x.Attribute("caption");
-                    columnCaptions.Add(x.Name.LocalName, caps != null ? x.Attribute("caption").Value : "CAPTION");
+                    columnCaptions.Add(x.Name.LocalName, caps?.Value ?? "CAPTION");
                 }
-                x.RemoveAttributes();
             }
 
             StringReader sr = new StringReader(xDoc.ToString());
@@ -265,6 +286,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
         /// <param name="ds">The DataSet to convert.</param>
         /// <returns></returns>
         /// =================================================================================
+        // ReSharper disable once InconsistentNaming
         public static string DataSetToXMLString(DataSet ds)
         {
             XmlDocument xmlDoc = new XmlDocument();
@@ -343,10 +365,11 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             if (data[0] != '<' && data.TrimStart()[0] != '<') return false;
             try
             {
+                // ReSharper disable once UnusedVariable
                 string isValid = XElement.Parse(data).Value;
                 return true;
             }
-            catch (System.Xml.XmlException)
+            catch (XmlException)
             {
                 return false;
             }
