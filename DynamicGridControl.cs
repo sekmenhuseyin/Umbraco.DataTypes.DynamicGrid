@@ -93,12 +93,14 @@ namespace Umbraco.DataTypes.DynamicGrid
             };
             var uploadExcel = new FileUpload
             {
-                ID = "uploadExcel"
+                ID = "uploadExcel",
+                CssClass = "DynamicGridControlUploadFileSelect"
             };
             var uploadExcelButton = new LinkButton
             {
                 ID = "uploadExcelButton",
-                Text = "Excel'den Yükle"
+                Text = "Excel'den Yükle",
+                CssClass= "DynamicGridControlUploadExcelButton"
             };
             _tablePanel = new Panel
             {
@@ -170,10 +172,7 @@ namespace Umbraco.DataTypes.DynamicGrid
                         case "addRow": // Add new row
                             RowCount = RowCount + 1;
                             break;
-
-                        case "uploadExcel": // upload excel file
-
-                            break;
+                            
                     }
                 }
                 // Add grid based on new rowCount/colCount values
