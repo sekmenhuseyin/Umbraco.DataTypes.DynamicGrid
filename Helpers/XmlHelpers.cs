@@ -113,7 +113,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             DataTable dt = ds.Tables["Row"];
             Table newTable = new Table { ID = "DynamicGridTable" };
 
-            /////////////////// Add IDs row
+            ////////////////////////////////////// Add IDs row //////////////////////////////////////
             TableRow headerRow = new TableRow();
             //auto generated haeder id row
             for (int i = 0; i < dt.Columns.Count; i++)
@@ -144,8 +144,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             //add all cols to row
             newTable.Rows.Add(headerRow);
 
-            /////////////////// Add Caption row
-
+            ////////////////////////////////////// Add Caption row //////////////////////////////////////
             TableRow captionRow = new TableRow();
             //auto generated caption row
             for (int i = 0; i < dt.Columns.Count; i++)
@@ -194,7 +193,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             //add all cols to row
             newTable.Rows.Add(captionRow);
 
-            /////////////////// Add value rows
+            ////////////////////////////////////// Add value rows //////////////////////////////////////
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 TableRow valueRow = new TableRow { CssClass = "TableRow" + i };
@@ -255,15 +254,12 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
 
             foreach (var x in els)
             {
-                if (columnCaptions.ContainsKey(x.Name.LocalName))
-                {
-                    x.RemoveAttributes();
-                }
-                else
+                if (!columnCaptions.ContainsKey(x.Name.LocalName))
                 {
                     var caps = x.Attribute("caption");
                     columnCaptions.Add(x.Name.LocalName, caps?.Value ?? "CAPTION");
                 }
+                x.RemoveAttributes();
             }
 
             StringReader sr = new StringReader(xDoc.ToString());

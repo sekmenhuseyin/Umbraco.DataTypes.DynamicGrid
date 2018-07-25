@@ -10,6 +10,10 @@ namespace Umbraco.DataTypes.DynamicGrid
     public class DynamicGridControl : UpdatePanel
     {
         /// <summary>
+        /// this sapces has to here otherwise only one spacer is added to page
+        /// </summary>
+        private HtmlGenericControl LinksSpacer => new HtmlGenericControl("span") { InnerHtml = "&nbsp;|&nbsp;" };
+        /// <summary>
         /// Panel to hold the controls
         /// </summary>
         private Panel _tablePanel;
@@ -65,45 +69,53 @@ namespace Umbraco.DataTypes.DynamicGrid
             base.OnLoad(e);
             UpdateMode = UpdatePanelUpdateMode.Conditional;
             // Initialize buttons & Panel
-            HtmlGenericControl linksSpacer = new HtmlGenericControl("span") { InnerHtml = "&nbsp;|&nbsp;" };
-            LinkButton addColumn = new LinkButton
+            var addColumn = new LinkButton
             {
                 ID = "addColumn",
                 Text = "Sütun Ekle"
             };
-            LinkButton removeColumn = new LinkButton
+            var removeColumn = new LinkButton
             {
                 ID = "removeColumn",
                 Text = "Sütun Kaldır"
             };
-            LinkButton addRow = new LinkButton
+            var addRow = new LinkButton
             {
                 ID = "addRow",
                 Text = "Satır Ekle"
             };
-            LinkButton removeRow = new LinkButton
+            var removeRow = new LinkButton
             {
                 ID = "removeRow",
                 CssClass = "DynamicGridControlDeleteSelected",
                 Text = "Seçili Satırları Sil",
                 OnClientClick = "DeleteCampaignsFromTable();"
             };
-            LinkButton uploadExcel = new LinkButton
+            var uploadExcel = new FileUpload
             {
-                ID = "uploadExcel",
+                ID = "uploadExcel"
+            };
+            var uploadExcelButton = new LinkButton
+            {
+                ID = "uploadExcelButton",
                 Text = "Excel'den Yükle"
             };
-            _tablePanel = new Panel { ID = "PanelPlaceholder", CssClass = "PanelPlaceholder" };
+            _tablePanel = new Panel
+            {
+                ID = "PanelPlaceholder",
+                CssClass = "PanelPlaceholder"
+            };
             // Add to Update Panel
             _tablePanel.Controls.Add(addColumn);
-            _tablePanel.Controls.Add(linksSpacer);
+            _tablePanel.Controls.Add(LinksSpacer);
             _tablePanel.Controls.Add(removeColumn);
-            _tablePanel.Controls.Add(linksSpacer);
+            _tablePanel.Controls.Add(LinksSpacer);
             _tablePanel.Controls.Add(addRow);
-            _tablePanel.Controls.Add(linksSpacer);
+            _tablePanel.Controls.Add(LinksSpacer);
             _tablePanel.Controls.Add(removeRow);
-            _tablePanel.Controls.Add(linksSpacer);
+            _tablePanel.Controls.Add(LinksSpacer);
             _tablePanel.Controls.Add(uploadExcel);
+            _tablePanel.Controls.Add(uploadExcelButton);
             //add panel to page
             ContentTemplateContainer.Controls.Add(_tablePanel);
             // if no postback
