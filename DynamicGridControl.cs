@@ -92,7 +92,7 @@ namespace Umbraco.DataTypes.DynamicGrid
             };
             _resetTable = new LinkButton
             {
-                ID = "resetTable",
+                ID = "uploadExcel",
                 Text = "Excel'den Yükle"
             };
             _tablePanel = new Panel { ID = "PanelPlaceholder", CssClass = "PanelPlaceholder" };
@@ -163,9 +163,8 @@ namespace Umbraco.DataTypes.DynamicGrid
                             RowCount = RowCount + 1;
                             break;
 
-                        case "resetTable": // Reset to default values
-                            ColCount = NumberOfCols;
-                            RowCount = NumberOfRows;
+                        case "uploadExcel": // upload excel file
+
                             break;
 
                         default:
