@@ -95,7 +95,6 @@
     <Compile Include="DynamicGridData.cs" />
     <Compile Include="DynamicGridDataType.cs" />
     <Compile Include="DynamicGridControl.cs" />
-    <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\WebUiHelpers.cs" />
     <Compile Include="Helpers\XmlHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
