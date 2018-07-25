@@ -10,6 +10,8 @@ namespace Umbraco.DataTypes.DynamicGrid
     public class DynamicGridControl : UpdatePanel
     {
         // Buttons
+        private LinkButton _addColumn;
+        private LinkButton _removeColumn;
         private LinkButton _addRow;
         private LinkButton _removeRow;
         private LinkButton _resetTable;
@@ -66,6 +68,16 @@ namespace Umbraco.DataTypes.DynamicGrid
             base.UpdateMode = UpdatePanelUpdateMode.Conditional;
 
             // Initialize buttons & Panel
+            _addColumn = new LinkButton
+            {
+                ID = "addColumn",
+                Text = "Sütun Ekle"
+            };
+            _removeColumn = new LinkButton
+            {
+                ID = "removeColumn",
+                Text = "Sütun Kaldır"
+            };
             _addRow = new LinkButton
             {
                 ID = "addRow",
@@ -86,6 +98,10 @@ namespace Umbraco.DataTypes.DynamicGrid
             _tablePanel = new Panel { ID = "PanelPlaceholder", CssClass = "PanelPlaceholder" };
 
             // Add to Update Panel
+            _tablePanel.Controls.Add(_addColumn);
+            _tablePanel.Controls.Add(linksSpacer);
+            _tablePanel.Controls.Add(_removeColumn);
+            _tablePanel.Controls.Add(linksSpacer);
             _tablePanel.Controls.Add(_addRow);
             _tablePanel.Controls.Add(linksSpacer);
             _tablePanel.Controls.Add(_removeRow);
@@ -131,13 +147,25 @@ namespace Umbraco.DataTypes.DynamicGrid
 
                     switch (controlId)
                     {
-                        case "resetTable": // Reset to default values
-                            ColCount = NumberOfCols;
-                            RowCount = NumberOfRows;
+                        case "addColumn": // Add new column
+                            ColCount = ColCount + 1;
+                            break;
+
+                        case "removeColumn": // Remove 1 column
+                            // Has to have at least 2 columns
+                            if (ColCount > 2)
+                            {
+                                ColCount = ColCount - 1;
+                            }
                             break;
 
                         case "addRow": // Add new row
                             RowCount = RowCount + 1;
+                            break;
+
+                        case "resetTable": // Reset to default values
+                            ColCount = NumberOfCols;
+                            RowCount = NumberOfRows;
                             break;
 
                         default:

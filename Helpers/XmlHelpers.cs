@@ -12,7 +12,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
     public static class XmlHelpers
     {
         private const string TxtDelete = "Sil";
-        private static readonly string[] TxtColNames = { "Proje Adı", "Kampanya Kodu", "Portföy/İlgili Kişi", "Yüklenici Firma", "İl", "İlçe", "Duyuru Linki", "Ekstra" };
+        private static readonly string[] TxtColNames = { "Proje Adı", "Kampanya Kodu", "Portföy/İlgili Kişi", "Yüklenici Firma", "İl", "İlçe", "Duyuru Linki", "Ekstra1", "Ekstra2", "Ekstra3", "Ekstra4", "Ekstra5", "Ekstra6", "Ekstra7", "Ekstra8", "Ekstra9" };
 
         /// =================================================================================
         /// <summary>
