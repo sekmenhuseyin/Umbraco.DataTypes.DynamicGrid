@@ -9,22 +9,19 @@ namespace Umbraco.DataTypes.DynamicGrid
 {
     public class DynamicGridControl : UpdatePanel
     {
-        // Buttons
-        private LinkButton _addColumn;
-        private LinkButton _removeColumn;
-        private LinkButton _addRow;
-        private LinkButton _removeRow;
-        private LinkButton _resetTable;
-        private HtmlGenericControl linksSpacer => new HtmlGenericControl("span") { InnerHtml = "&nbsp;|&nbsp;" };
-        //Panel to hold the controls
+        /// <summary>
+        /// Panel to hold the controls
+        /// </summary>
         private Panel _tablePanel;
         /// <summary>
         /// number of cols in the table
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public int NumberOfCols { get; set; }
         /// <summary>
         /// number of rows in the table
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public int NumberOfRows { get; set; }
         /// <summary>
         /// the xml that out table ,s de,gned from
@@ -42,6 +39,7 @@ namespace Umbraco.DataTypes.DynamicGrid
                     _xmlValue = value;
             }
         }
+        // ReSharper disable once InconsistentNaming
         private string _xmlValue { get; set; }
         /// <summary>
         /// A counter that stores the number of columns to be created.
@@ -65,52 +63,50 @@ namespace Umbraco.DataTypes.DynamicGrid
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            base.UpdateMode = UpdatePanelUpdateMode.Conditional;
-
+            UpdateMode = UpdatePanelUpdateMode.Conditional;
             // Initialize buttons & Panel
-            _addColumn = new LinkButton
+            HtmlGenericControl linksSpacer = new HtmlGenericControl("span") { InnerHtml = "&nbsp;|&nbsp;" };
+            LinkButton addColumn = new LinkButton
             {
                 ID = "addColumn",
                 Text = "Sütun Ekle"
             };
-            _removeColumn = new LinkButton
+            LinkButton removeColumn = new LinkButton
             {
                 ID = "removeColumn",
                 Text = "Sütun Kaldır"
             };
-            _addRow = new LinkButton
+            LinkButton addRow = new LinkButton
             {
                 ID = "addRow",
                 Text = "Satır Ekle"
             };
-            _removeRow = new LinkButton
+            LinkButton removeRow = new LinkButton
             {
                 ID = "removeRow",
                 CssClass = "DynamicGridControlDeleteSelected",
                 Text = "Seçili Satırları Sil",
                 OnClientClick = "DeleteCampaignsFromTable();"
             };
-            _resetTable = new LinkButton
+            LinkButton uploadExcel = new LinkButton
             {
                 ID = "uploadExcel",
                 Text = "Excel'den Yükle"
             };
             _tablePanel = new Panel { ID = "PanelPlaceholder", CssClass = "PanelPlaceholder" };
-
             // Add to Update Panel
-            _tablePanel.Controls.Add(_addColumn);
+            _tablePanel.Controls.Add(addColumn);
             _tablePanel.Controls.Add(linksSpacer);
-            _tablePanel.Controls.Add(_removeColumn);
+            _tablePanel.Controls.Add(removeColumn);
             _tablePanel.Controls.Add(linksSpacer);
-            _tablePanel.Controls.Add(_addRow);
+            _tablePanel.Controls.Add(addRow);
             _tablePanel.Controls.Add(linksSpacer);
-            _tablePanel.Controls.Add(_removeRow);
+            _tablePanel.Controls.Add(removeRow);
             _tablePanel.Controls.Add(linksSpacer);
-            _tablePanel.Controls.Add(_resetTable);
-
-            base.ContentTemplateContainer.Controls.Add(_tablePanel);
-
-            // no postback
+            _tablePanel.Controls.Add(uploadExcel);
+            //add panel to page
+            ContentTemplateContainer.Controls.Add(_tablePanel);
+            // if no postback
             // could have values in db, or could prepopulate with defaults
             if (!Page.IsPostBack)
             {
@@ -136,14 +132,14 @@ namespace Umbraco.DataTypes.DynamicGrid
                     ColCount = dt.Columns.Count;
                 }
             }
-            // postback: occurs when a link is pressed
+            // if postback: occurs when a link is pressed
             else
             {
                 // We're using GetPostBackControl instead of the buttons' click events due to Page Cycle issues
                 // See http://stackoverflow.com/questions/2800496/c-counter-requires-2-button-clicks-to-update
-                if (WebUiHelpers.GetPostBackControl(this.Page) != null)
+                if (WebUiHelpers.GetPostBackControl(Page) != null)
                 {
-                    string controlId = WebUiHelpers.GetPostBackControl(this.Page).ID;
+                    string controlId = WebUiHelpers.GetPostBackControl(Page).ID;
 
                     switch (controlId)
                     {
@@ -165,9 +161,6 @@ namespace Umbraco.DataTypes.DynamicGrid
 
                         case "uploadExcel": // upload excel file
 
-                            break;
-
-                        default:
                             break;
                     }
                 }
