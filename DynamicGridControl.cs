@@ -9,11 +9,24 @@ namespace Umbraco.DataTypes.DynamicGrid
 {
     public class DynamicGridControl : UpdatePanel
     {
-        public int NumberOfRows { get; set; }
+        // Buttons
+        private LinkButton _addRow;
+        private LinkButton _removeRow;
+        private LinkButton _resetTable;
+        private HtmlGenericControl linksSpacer => new HtmlGenericControl("span") { InnerHtml = "&nbsp;|&nbsp;" };
+        //Panel to hold the controls
+        private Panel _tablePanel;
+        /// <summary>
+        /// number of cols in the table
+        /// </summary>
         public int NumberOfCols { get; set; }
-
-        private string _xmlValue { get; set; }
-
+        /// <summary>
+        /// number of rows in the table
+        /// </summary>
+        public int NumberOfRows { get; set; }
+        /// <summary>
+        /// the xml that out table ,s de,gned from
+        /// </summary>
         public string XmlValue
         {
             get
@@ -27,32 +40,7 @@ namespace Umbraco.DataTypes.DynamicGrid
                     _xmlValue = value;
             }
         }
-
-        // todo: don't want to use this, but how do i add multiple identical controls to the same page, and still read them with "findcontrol"?
-        private string UniqueId => this.UniqueID;
-
-        /// =================================================================================
-        /// UI & Counters
-        /// =================================================================================
-
-        // Buttons
-        private LinkButton _addRow;
-        private LinkButton _removeRow;
-        private LinkButton _resetTable;
-        private HtmlGenericControl linksSpacer => new HtmlGenericControl("span") { InnerHtml = "&nbsp;|&nbsp;" };
-
-        //Panel to hold the controls
-        private Panel _tablePanel;
-
-        /// <summary>
-        /// A counter that stores the number of rows to be created.
-        /// </summary>
-        private int RowCount
-        {
-            get => (int)ViewState["rowCount"];
-            set => ViewState["rowCount"] = value;
-        }
-
+        private string _xmlValue { get; set; }
         /// <summary>
         /// A counter that stores the number of columns to be created.
         /// </summary>
@@ -61,7 +49,14 @@ namespace Umbraco.DataTypes.DynamicGrid
             get => (int)ViewState["colCount"];
             set => ViewState["colCount"] = value;
         }
-
+        /// <summary>
+        /// A counter that stores the number of rows to be created.
+        /// </summary>
+        private int RowCount
+        {
+            get => (int)ViewState["rowCount"];
+            set => ViewState["rowCount"] = value;
+        }
         /// =================================================================================
         /// when page loads design links and page
         /// =================================================================================
