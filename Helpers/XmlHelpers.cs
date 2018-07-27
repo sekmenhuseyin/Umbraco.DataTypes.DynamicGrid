@@ -111,6 +111,9 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
         public static Table DataSetToTable(DataSet ds)
         {
             DataTable dt = ds.Tables["Row"];
+            var dv = dt.DefaultView;
+            dv.Sort="C1 ASC";
+            dt = dv.ToTable();
             Table newTable = new Table { ID = "DynamicGridTable" };
 
             ////////////////////////////////////// Add IDs row //////////////////////////////////////
