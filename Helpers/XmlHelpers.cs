@@ -59,7 +59,6 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
             for (int i = 2; i < table.Rows.Count; i++)
             {
                 var isChecked = false;
-                var addedRows = 0;
                 DataRow valueRow = dt.NewRow();
                 for (int x = 0; x < table.Rows[i].Cells.Count; x++)
                 {
@@ -83,20 +82,18 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
                     }
                 }
                 //if this has a checked to delete col do not add: so it will be deleted
-                //but do NOT delete the last 2 lines: otherwise page will throw error
-                if (isChecked && (i < table.Rows.Count - 2 || addedRows != 0))
-                {
-                    continue;
-                }
-
-                dt.Rows.Add(valueRow);
-                // ReSharper disable once RedundantAssignment
-                addedRows++;
+                if (!isChecked) dt.Rows.Add(valueRow);
             }
-
+            // ReSharper disable once InvertIf
+            //if all the rows are deleted add two empty lines
             if (dt.Rows.Count == 0)
             {
-
+                DataRow valueRow = dt.NewRow();
+                for (int x = 0; x < table.Rows[0].Cells.Count - 1; x++)
+                {
+                    valueRow[x] = "";
+                }
+                dt.Rows.Add(valueRow);
             }
             return ds;
         }
@@ -112,7 +109,7 @@ namespace Umbraco.DataTypes.DynamicGrid.Helpers
         {
             DataTable dt = ds.Tables["Row"];
             var dv = dt.DefaultView;
-            dv.Sort="C1 ASC";
+            dv.Sort = "C1 ASC";
             dt = dv.ToTable();
             Table newTable = new Table { ID = "DynamicGridTable" };
 
