@@ -167,6 +167,7 @@ namespace Umbraco.DataTypes.DynamicGrid
                     {
                         case "addColumn": // Add new column
                             ColCount = ColCount + 1;
+                            ScriptManager.RegisterStartupScript(this, typeof(Page), "UpdateMsg", "DynamicGridControlSpeechBubble('Başarılı', 'Sütun eklendi', 'save');", true);
                             break;
 
                         case "removeColumn": // Remove 1 column
@@ -174,11 +175,15 @@ namespace Umbraco.DataTypes.DynamicGrid
                             if (ColCount > 2)
                             {
                                 ColCount = ColCount - 1;
+                                ScriptManager.RegisterStartupScript(this, typeof(Page), "UpdateMsg", "DynamicGridControlSpeechBubble('Başarılı', 'Sütun silindi', 'save');", true);
                             }
+                            else
+                                ScriptManager.RegisterStartupScript(this, typeof(Page), "UpdateMsg", "DynamicGridControlSpeechBubble('Hata', 'Sütun silinmedi', 'error');", true);
                             break;
 
                         case "addRow": // Add new row
                             RowCount = RowCount + 1;
+                            ScriptManager.RegisterStartupScript(this, typeof(Page), "UpdateMsg", "DynamicGridControlSpeechBubble('Başarılı', 'Satır eklendi', 'save');", true);
                             break;
                     }
                 }
